@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PHONE, PHONE_HREF, SMS_HREF } from "@/data/content";
@@ -10,6 +9,8 @@ import { OfficeBlock } from "@/components/OfficeBlock";
 import { CtaButtons } from "@/components/CtaButtons";
 import { ValuationHint } from "@/components/ValuationHint";
 import { customerStateContent } from "@/data/customer-content";
+import { breadcrumbSchema, jsonLd } from "@/lib/schema";
+import { pageSeo } from "@/lib/seo";
 
 function isServiceSlug(slug: string) {
   return SERVICES.some((s) => s.slug === slug);
@@ -30,27 +31,31 @@ export function generateStaticParams() {
   return params;
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ type: string; state: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ type: string; state: string }>;
+}) {
   const { type, state: stateOrService } = await params;
   const ct = CUSTOMER_TYPES.find((c) => c.slug === type);
   if (!ct) return {};
 
   if (isServiceSlug(stateOrService)) {
     const svc = SERVICES.find((s) => s.slug === stateOrService)!;
-    return {
+    return pageSeo({
       title: `${svc.title} for ${ct.name} — The Roadside Helper`,
       description: `${svc.title} specifically for ${ct.name.toLowerCase()}. ${svc.description} $100/hr flat, all standard equipment included.`,
-      alternates: { canonical: `/who-we-serve/${type}/${stateOrService}` },
-    };
+      path: `/who-we-serve/${type}/${stateOrService}`,
+    });
   }
 
   const state = getStateBySlug(stateOrService);
   if (!state) return {};
-  return {
+  return pageSeo({
     title: `Roadside Assistance for ${ct.name} in ${state.name} — The Roadside Helper`,
     description: `${ct.name} roadside assistance in ${state.cities.length} ${state.abbreviation} cities. ${ct.description} $100/hr flat, all standard equipment included.`,
-    alternates: { canonical: `/who-we-serve/${type}/${stateOrService}` },
-  };
+    path: `/who-we-serve/${type}/${stateOrService}`,
+  });
 }
 
 export default async function TypeStatePage({ params }: { params: Promise<{ type: string; state: string }> }) {
@@ -63,6 +68,22 @@ export default async function TypeStatePage({ params }: { params: Promise<{ type
     const svc = SERVICES.find((s) => s.slug === stateOrService)!;
     return (
       <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: jsonLd(
+              breadcrumbSchema([
+                { name: "Home", path: "/" },
+                { name: "Who We Serve", path: "/who-we-serve" },
+                { name: ct.name, path: `/who-we-serve/${ct.slug}` },
+                {
+                  name: svc.title,
+                  path: `/who-we-serve/${ct.slug}/${svc.slug}`,
+                },
+              ]),
+            ),
+          }}
+        />
         <section className="relative overflow-hidden bg-gradient-to-br from-teal-700 via-teal-600 to-teal-800 pt-36 pb-16 sm:pt-44 sm:pb-24">
           <div className="absolute inset-0 grid-bg opacity-30" />
           <div className="relative mx-auto max-w-5xl px-6 text-center">
@@ -120,6 +141,19 @@ export default async function TypeStatePage({ params }: { params: Promise<{ type
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Who We Serve", path: "/who-we-serve" },
+              { name: ct.name, path: `/who-we-serve/${ct.slug}` },
+              { name: state.name, path: `/who-we-serve/${ct.slug}/${state.slug}` },
+            ]),
+          ),
+        }}
+      />
       <section className="relative overflow-hidden bg-gradient-to-br from-teal-700 via-teal-600 to-teal-800 pt-36 pb-16 sm:pt-44 sm:pb-24">
         <div className="absolute inset-0 grid-bg opacity-30" />
         <div className="relative mx-auto max-w-5xl px-6 text-center">

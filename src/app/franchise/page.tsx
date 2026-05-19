@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { EMAIL, CITY_COUNT } from "@/data/content";
+import { pageSeo } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageSeo({
   title: "Fleet Partner Program — Join the Roadside Helper Network 24/7",
-  description: "Join The Roadside Helper dispatch network as a fleet partner. For tow operators, mobile mechanics, and independent roadside contractors. Pay-per-call, no membership tier locks, transparent compensation.",
-  alternates: { canonical: "/franchise" },
-};
+  description:
+    "Join The Roadside Helper dispatch network as a fleet partner. For tow operators, mobile mechanics, and independent roadside contractors. Pay-per-call, no membership tier locks, transparent compensation.",
+  path: "/franchise",
+});
 
 export default function FranchisePage() {
   return (

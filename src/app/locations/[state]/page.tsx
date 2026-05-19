@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaButtons } from "@/components/CtaButtons";
 import { ValuationHint } from "@/components/ValuationHint";
@@ -9,17 +8,27 @@ import { SERVICES } from "@/data/services";
 import { statePageContent } from "@/data/content-templates";
 import { getOfficeByState } from "@/data/offices";
 import { OfficeBlock } from "@/components/OfficeBlock";
+import { breadcrumbSchema, jsonLd } from "@/lib/schema";
+import { pageSeo } from "@/lib/seo";
 
 export function generateStaticParams() {
   return STATES.map((s) => ({ state: s.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ state: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ state: string }>;
+}) {
   const { state: stateSlug } = await params;
   const state = getStateBySlug(stateSlug);
   if (!state) return {};
   const content = statePageContent(state.name, state.abbreviation, state.cities);
-  return { title: content.title, description: content.metaDescription, alternates: { canonical: `/locations/${stateSlug}` } };
+  return pageSeo({
+    title: content.title,
+    description: content.metaDescription,
+    path: `/locations/${stateSlug}`,
+  });
 }
 
 export default async function StatePage({ params }: { params: Promise<{ state: string }> }) {
@@ -32,6 +41,18 @@ export default async function StatePage({ params }: { params: Promise<{ state: s
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Locations", path: "/locations" },
+              { name: state.name, path: `/locations/${state.slug}` },
+            ]),
+          ),
+        }}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-teal-700 via-teal-600 to-teal-800 pt-36 pb-16 sm:pt-44 sm:pb-24">
         <div className="absolute inset-0 grid-bg opacity-30" />

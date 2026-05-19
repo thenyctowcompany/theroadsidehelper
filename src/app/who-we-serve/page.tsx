@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { CITY_COUNT, STATE_COUNT } from "@/data/content";
 import { CUSTOMER_TYPES } from "@/data/customer-types";
 import { CtaButtons } from "@/components/CtaButtons";
 import { ValuationHint } from "@/components/ValuationHint";
+import { pageSeo } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Who We Serve — Roadside Assistance for Homeowners, Businesses, Property Managers & More",
-  description: `We serve 13 customer types across ${CITY_COUNT}+ cities. Homeowners, renters, property managers, realtors, businesses, estate managers, contractors, and more. $100/hr flat.`,
-  alternates: { canonical: "/who-we-serve" },
-};
+export const metadata = pageSeo({
+  title: "Who We Serve — Roadside Assistance for Drivers, Riders, Fleets & More",
+  description: `We serve ${CUSTOMER_TYPES.length} driver types across ${CITY_COUNT}+ cities. Commuters, rideshare drivers, parents, motorcycle riders, RV travelers, fleet managers, contractors, and more. $100/hr flat.`,
+  path: "/who-we-serve",
+});
 
 export default function WhoWeServePage() {
   return (
@@ -22,7 +22,7 @@ export default function WhoWeServePage() {
             Who We Serve — <span className="gradient-text">Roadside Assistance for Everyone</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-white/80">
-            Whether you&apos;re a homeowner clearing a garage, a property manager turning units, or a business closing an office — our model saves you money and pays you for what&apos;s worth something.
+            Whether you&apos;re a daily commuter, a rideshare driver between fares, a parent stranded with kids in the car, or a fleet manager keeping vans on the road — we get you back rolling fast at one flat rate.
           </p>
           <CtaButtons variant="dark" />
         </div>
@@ -33,7 +33,7 @@ export default function WhoWeServePage() {
           <p className="text-center text-sm font-semibold uppercase tracking-widest text-teal-600 font-cta">Roadside Assistance Services Tailored to Your Situation</p>
           <h2 className="mt-3 text-center text-3xl font-bold text-slate-900 font-heading">{CUSTOMER_TYPES.length} Customer Types We Serve</h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-600">
-            Click your category to see how our <Link href="/pricing" className="text-teal-700 font-semibold hover:underline">pricing</Link> and 24/7 dispatch work for your specific situation. Every type gets the same rate, the same credits, and the same <Link href="/services" className="text-teal-700 font-semibold hover:underline">34 services</Link> across <Link href="/locations" className="text-teal-700 font-semibold hover:underline">{CITY_COUNT}+ cities</Link>.
+            Click your category to see how our <Link href="/pricing" className="text-teal-700 font-semibold hover:underline">pricing</Link> and 24/7 dispatch work for your specific situation. Every type gets the same flat rate and access to <Link href="/services" className="text-teal-700 font-semibold hover:underline">every roadside service</Link> across <Link href="/locations" className="text-teal-700 font-semibold hover:underline">{CITY_COUNT}+ cities</Link>.
           </p>
           <ValuationHint className="mx-auto mt-6 max-w-3xl" />
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

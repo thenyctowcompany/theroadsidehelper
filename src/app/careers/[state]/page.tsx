@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PHONE, PHONE_HREF, SMS_HREF, EMAIL } from "@/data/content";
@@ -7,20 +6,26 @@ import { getOfficeByState } from "@/data/offices";
 import { OfficeBlock } from "@/components/OfficeBlock";
 import { CtaButtons } from "@/components/CtaButtons";
 import { JobApplicationForm } from "@/components/JobApplicationForm";
+import { breadcrumbSchema, jsonLd } from "@/lib/schema";
+import { pageSeo } from "@/lib/seo";
 
 export function generateStaticParams() {
   return STATES.map((s) => ({ state: s.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ state: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ state: string }>;
+}) {
   const { state: stateSlug } = await params;
   const state = getStateBySlug(stateSlug);
   if (!state) return {};
-  return {
+  return pageSeo({
     title: `Roadside Assistance Jobs in ${state.name} — We're Hiring in ${state.cities.length} Cities`,
-    description: `Join The Roadside Helper in ${state.name}. Hiring crew members in ${state.cities.length} cities across ${state.abbreviation}. Competitive pay, tips, benefits, growth. Apply today.`,
-    alternates: { canonical: `/careers/${stateSlug}` },
-  };
+    description: `Join The Roadside Helper in ${state.name}. Hiring roadside technicians in ${state.cities.length} cities across ${state.abbreviation}. Competitive pay, tips, benefits, growth. Apply today.`,
+    path: `/careers/${stateSlug}`,
+  });
 }
 
 export default async function StateJobsPage({ params }: { params: Promise<{ state: string }> }) {
@@ -31,6 +36,18 @@ export default async function StateJobsPage({ params }: { params: Promise<{ stat
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Careers", path: "/careers" },
+              { name: state.name, path: `/careers/${state.slug}` },
+            ]),
+          ),
+        }}
+      />
       <section className="relative overflow-hidden bg-gradient-to-br from-teal-700 via-teal-600 to-teal-800 pt-36 pb-16 sm:pt-44 sm:pb-24">
         <div className="absolute inset-0 grid-bg opacity-30" />
         <div className="relative mx-auto max-w-5xl px-6 text-center">
@@ -39,7 +56,7 @@ export default async function StateJobsPage({ params }: { params: Promise<{ stat
             Roadside Assistance Jobs in <span className="gradient-text">{state.name}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-white/80">
-            Join the only roadside assistance company that pays customers. We&apos;re hiring crew members, team leads, and drivers across {state.name}.
+            No-membership roadside assistance with one flat rate, 24/7 dispatch, and real techs. We&apos;re hiring roadside technicians, shift leads, and dispatchers across {state.name}.
           </p>
           <CtaButtons variant="dark" />
         </div>
@@ -47,22 +64,22 @@ export default async function StateJobsPage({ params }: { params: Promise<{ stat
 
       <section className="bg-section-white py-16">
         <div className="mx-auto max-w-5xl px-6">
-          <p className="text-center text-sm font-semibold uppercase tracking-widest text-teal-600 font-cta">Roadside Assistance Crew Member Positions in {state.abbreviation}</p>
+          <p className="text-center text-sm font-semibold uppercase tracking-widest text-teal-600 font-cta">Roadside Technician Positions in {state.abbreviation}</p>
           <h2 className="mt-3 text-center text-3xl font-bold text-slate-900 font-heading">Why Work for The Roadside Helper in {state.name}?</h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-600">
-            We&apos;re not your typical hauling company. Our crews are trained technicians who identify value in every item. Learn about our <Link href="/pricing" className="text-teal-700 font-semibold hover:underline">pricing model</Link>, explore <Link href="/services" className="text-teal-700 font-semibold hover:underline">all 34 services</Link> you&apos;ll deliver, and see our <Link href={`/locations/${stateSlug}`} className="text-teal-700 font-semibold hover:underline">{state.name} office</Link>.
+            We&apos;re hiring trained roadside technicians who get drivers back on the road fast. Learn about our <Link href="/pricing" className="text-teal-700 font-semibold hover:underline">pricing model</Link>, explore <Link href="/services" className="text-teal-700 font-semibold hover:underline">every roadside service</Link> you&apos;ll perform, and see our <Link href={`/locations/${stateSlug}`} className="text-teal-700 font-semibold hover:underline">{state.name} office</Link>.
           </p>
           <div className="mx-auto mt-8 max-w-3xl space-y-5 text-center text-base leading-relaxed text-slate-700">
-            <p>Working for The Roadside Helper in {state.name} means joining a team that does things differently. Our crew members don&apos;t just provide roadside help — they&apos;re trained to spot value, assess items fairly, and deliver an experience that makes customers say &quot;I can&apos;t believe a roadside company just paid me.&quot; That positive energy makes every day better — better tips, better reviews, better job satisfaction.</p>
-            <p>We&apos;re growing fast in {state.name}. With {state.cities.length} cities served and more launching every month, there are constant opportunities for advancement — from crew member to team lead to operations manager. We promote from within and reward performance.</p>
+            <p>Working for The Roadside Helper in {state.name} means joining a team of real roadside technicians — not contracted gig drivers. Our techs jump-start cars, change tires, unlock doors, deliver fuel, run winch-outs, and tow vehicles. They&apos;re trained to diagnose problems on the spot, communicate clearly with stressed drivers, and deliver an experience that earns 5-star reviews and real tips.</p>
+            <p>We&apos;re growing fast in {state.name}. With {state.cities.length} cities served and more launching every month, there are constant opportunities for advancement — from technician to shift lead to operations manager. We promote from within and reward performance.</p>
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { title: "$50/Hour", desc: "Crew members earn $50/hr from day one. No experience required — we train you. That's $400/day on a standard 8-hour shift." },
-              { title: "Tips on Top", desc: "Customers tip well when you save them money. Average crew members earn $50–$150/day in tips on top of hourly pay." },
-              { title: "Paid Training", desc: "Full paid training covering safe handling, item assessment, customer service, and truck operations. You earn while you learn." },
-              { title: "Flexible Schedule", desc: "Full-time and part-time available. Pick your days. We operate 7AM–8PM, 7 days a week." },
-              { title: "Growth Path", desc: "Crew Member → Team Lead ($60/hr) → Operations Manager (salary). We promote from within, always." },
+              { title: "$50/Hour", desc: "Technicians earn $50/hr from day one. No prior roadside experience required — we train you. That's $400/day on a standard 8-hour shift." },
+              { title: "Tips on Top", desc: "Customers tip well when you get them rolling fast. Average techs earn $50–$150/day in tips on top of hourly pay." },
+              { title: "Paid Training", desc: "Full paid training covering jump-starts, tire change, lockout entry, winch rigging, towing, and customer service. You earn while you learn." },
+              { title: "Flexible Schedule", desc: "Full-time and part-time available. Pick your days. We dispatch 24/7, 7 days a week." },
+              { title: "Growth Path", desc: "Technician → Shift Lead ($60/hr) → Operations Manager (salary). We promote from within, always." },
               { title: "Full Benefits", desc: "Health insurance, paid time off, and 401k for full-time employees. Part-time gets flexible scheduling and tips." },
             ].map((item) => (
               <div key={item.title} className="rounded-xl border border-slate-200 bg-white p-6 transition-all hover:border-teal-400 hover:shadow-md">
@@ -78,7 +95,7 @@ export default async function StateJobsPage({ params }: { params: Promise<{ stat
         <div className="mx-auto max-w-5xl px-6">
           <p className="text-center text-sm font-semibold uppercase tracking-widest text-teal-600 font-cta">Hiring in {state.cities.length} {state.name} Cities</p>
           <h2 className="mt-3 text-center text-3xl font-bold text-slate-900 font-heading">Cities Hiring in {state.name}</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-600">Click your city to see the local job listing and apply. Every city has positions available for crew members and drivers.</p>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-600">Click your city to see the local job listing and apply. Every city has positions available for roadside technicians.</p>
           <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {state.cities.map((city) => (
               <Link key={city.slug} href={`/careers/${stateSlug}/${city.slug}`}
@@ -137,7 +154,7 @@ export default async function StateJobsPage({ params }: { params: Promise<{ stat
               <div className="mt-6 space-y-4">
                 <div className="rounded-lg bg-white border border-slate-200 p-4">
                   <p className="text-2xl font-bold text-teal-700 font-heading">$50/hr</p>
-                  <p className="text-sm text-slate-600">Starting pay for all crew members</p>
+                  <p className="text-sm text-slate-600">Starting pay for all technicians</p>
                 </div>
                 <div className="rounded-lg bg-white border border-slate-200 p-4">
                   <p className="text-2xl font-bold text-teal-700 font-heading">$50–$150/day</p>

@@ -50,11 +50,6 @@ export const SERVICE_PHOTOS: Record<string, SitePhoto> = {
     alt: "Orange car battery installed inside a vehicle engine bay",
     credit: "Photo: Ayyeee Ayyeee / Pexels",
   },
-  "house-lockout-service": {
-    url: "https://images.pexels.com/photos/279810/pexels-photo-279810.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
-    alt: "Metal door handle with key inserted in lock",
-    credit: "Photo: Pixabay / Pexels",
-  },
   "motorcycle-roadside": {
     url: "https://images.pexels.com/photos/20806421/pexels-photo-20806421.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
     alt: "Classic motorcycle parked on a rural road",
@@ -74,6 +69,31 @@ export const SERVICE_PHOTOS: Record<string, SitePhoto> = {
     url: "https://images.pexels.com/photos/842528/pexels-photo-842528.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
     alt: "Car keys and key fob with keychain on a white surface",
     credit: "Photo: Brett Jordan / Pexels",
+  },
+  "ev-charging-delivery": {
+    url: "https://images.pexels.com/photos/36405842/pexels-photo-36405842.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
+    alt: "Close-up of a person plugging in an electric car at a charging station",
+    credit: "Photo: Holiday Extras / Pexels",
+  },
+  "mobile-tire-replacement": {
+    url: "https://images.pexels.com/photos/9996404/pexels-photo-9996404.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
+    alt: "Close-up of a mounted tire on a vehicle",
+    credit: "Photo: Volker Thimm / Pexels",
+  },
+  "trunk-lockout-service": {
+    url: "https://images.pexels.com/photos/18393010/pexels-photo-18393010.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
+    alt: "Rear view of a modern black car with open trunk",
+    credit: "Photo: Mike Bird / Pexels",
+  },
+  "broken-key-extraction": {
+    url: "https://images.pexels.com/photos/115642/pexels-photo-115642.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
+    alt: "Close-up of a metallic key with lock cylinder",
+    credit: "Photo: George Becker / Pexels",
+  },
+  "accident-tow-service": {
+    url: "https://images.pexels.com/photos/17429097/pexels-photo-17429097.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
+    alt: "Tow truck operator loading a pickup truck onto a flatbed",
+    credit: "Photo: Jonathan Reynaga / Pexels",
   },
 };
 

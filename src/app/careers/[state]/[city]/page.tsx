@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PHONE, PHONE_HREF, SMS_HREF, EMAIL } from "@/data/content";
@@ -8,6 +7,8 @@ import { getOfficeByState } from "@/data/offices";
 import { OfficeBlock } from "@/components/OfficeBlock";
 import { CtaButtons } from "@/components/CtaButtons";
 import { JobApplicationForm } from "@/components/JobApplicationForm";
+import { breadcrumbSchema, jsonLd } from "@/lib/schema";
+import { pageSeo } from "@/lib/seo";
 
 export const dynamicParams = true;
 
@@ -15,15 +16,19 @@ export function generateStaticParams() {
   return getTopCitiesPerState(1).map(({ state, city }) => ({ state: state.slug, city: city.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ state: string; city: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ state: string; city: string }>;
+}) {
   const { state: stateSlug, city: citySlug } = await params;
   const result = getCityBySlug(stateSlug, citySlug);
   if (!result) return {};
-  return {
+  return pageSeo({
     title: `Roadside Assistance Jobs in ${result.city.name}, ${result.state.abbreviation} — Now Hiring`,
-    description: `Hiring roadside assistance crew members in ${result.city.name}, ${result.state.abbreviation}. Competitive pay, tips, benefits, paid training, growth opportunities. Apply today.`,
-    alternates: { canonical: `/careers/${stateSlug}/${citySlug}` },
-  };
+    description: `Hiring roadside technicians in ${result.city.name}, ${result.state.abbreviation}. Competitive pay, tips, benefits, paid training, growth opportunities. Apply today.`,
+    path: `/careers/${stateSlug}/${citySlug}`,
+  });
 }
 
 export default async function CityJobsPage({ params }: { params: Promise<{ state: string; city: string }> }) {
@@ -37,6 +42,19 @@ export default async function CityJobsPage({ params }: { params: Promise<{ state
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Careers", path: "/careers" },
+              { name: state.name, path: `/careers/${state.slug}` },
+              { name: city.name, path: `/careers/${state.slug}/${city.slug}` },
+            ]),
+          ),
+        }}
+      />
       <section className="relative overflow-hidden bg-gradient-to-br from-teal-700 via-teal-600 to-teal-800 pt-36 pb-16 sm:pt-44 sm:pb-24">
         <div className="absolute inset-0 grid-bg opacity-30" />
         <div className="relative mx-auto max-w-5xl px-6 text-center">
@@ -45,7 +63,7 @@ export default async function CityJobsPage({ params }: { params: Promise<{ state
             Roadside Assistance Jobs in <span className="gradient-text">{city.name}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-white/80">
-            Join the only roadside assistance company that pays customers for their stuff. We&apos;re hiring crew members in {city.name}, {state.abbreviation}.
+            No-membership roadside assistance with one flat rate, 24/7 dispatch, and real techs on the truck. We&apos;re hiring roadside technicians in {city.name}, {state.abbreviation}.
           </p>
         </div>
       </section>
@@ -58,9 +76,9 @@ export default async function CityJobsPage({ params }: { params: Promise<{ state
             Our {city.name} crews handle <Link href={`/locations/${stateSlug}/${citySlug}`} className="text-teal-700 font-semibold hover:underline">all {SERVICES.length} roadside assistance services</Link> — from <Link href="/services/flat-tire-change" className="text-teal-700 font-semibold hover:underline">tire change</Link> to <Link href="/services/tow-truck-service" className="text-teal-700 font-semibold hover:underline">full local towing</Link>. See <Link href="/pricing" className="text-teal-700 font-semibold hover:underline">how our pricing works</Link> and <Link href="/about" className="text-teal-700 font-semibold hover:underline">why we&apos;re different</Link>.
           </p>
           <div className="mx-auto mt-8 max-w-3xl space-y-5 text-center text-base leading-relaxed text-slate-700">
-            <p>As a crew member in {city.name}, you&apos;ll work directly with local homeowners, businesses, and property managers. You&apos;ll load items, identify service quality, present assessments to customers, and deliver an experience that gets 5-star reviews. Our {city.name} crews know the neighborhoods, the dump sites, the recycling centers, and the local local market — that knowledge makes every job faster and every assessment more accurate.</p>
-            <p>The job is physical — lifting, carrying, loading, driving. But it&apos;s also a thinking job. You&apos;ll learn to tell the difference between a $50 IKEA bookshelf and a $500 brand-name one. You&apos;ll know which appliances hold value and which electronics have active local markets. That assessment skill is what makes this job different from every other hauling gig in {city.name}.</p>
-            <p>We provide paid training, competitive hourly pay, tips (customers tip well when you save them money), quarterly bonuses, and a clear path from crew member to team lead to operations manager. Full-time positions include health insurance, PTO, and 401k.</p>
+            <p>As a roadside technician in {city.name}, you&apos;ll work directly with stranded drivers, rideshare drivers, parents, fleet operators, and commercial accounts. You&apos;ll jump-start dead batteries, change flat tires, unlock cars, deliver fuel, run winch-outs, and tow vehicles to shops or homes. Our {city.name} techs know the highways, the shoulder hazards, the towing destinations, and the local traffic patterns — that knowledge makes every dispatch faster and every job safer.</p>
+            <p>The job is physical — lifting jump packs, swapping tires, rigging winch lines, loading flatbeds. But it&apos;s also a thinking job. You&apos;ll learn to diagnose a battery vs. an alternator on the spot, tell a sidewall puncture from a tread puncture, and know when a lockout needs a wedge-and-rod vs. a slim-jim alternative. That diagnostic skill is what separates a real roadside tech from a generic hauler in {city.name}.</p>
+            <p>We provide paid training, competitive hourly pay, tips (customers tip well when you get them rolling fast), quarterly bonuses, and a clear path from technician to shift lead to operations manager. Full-time positions include health insurance, PTO, and 401k.</p>
           </div>
         </div>
       </section>

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PHONE, PHONE_HREF, SMS_HREF } from "@/data/content";
@@ -9,6 +8,8 @@ import { getOfficeByState } from "@/data/offices";
 import { OfficeBlock } from "@/components/OfficeBlock";
 import { CtaButtons } from "@/components/CtaButtons";
 import { customerCityContent } from "@/data/customer-content";
+import { breadcrumbSchema, jsonLd } from "@/lib/schema";
+import { pageSeo } from "@/lib/seo";
 
 export const dynamicParams = true;
 
@@ -23,16 +24,20 @@ export function generateStaticParams() {
   return params;
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ type: string; state: string; city: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ type: string; state: string; city: string }>;
+}) {
   const { type, state: stateSlug, city: citySlug } = await params;
   const ct = CUSTOMER_TYPES.find((c) => c.slug === type);
   const result = getCityBySlug(stateSlug, citySlug);
   if (!ct || !result) return {};
-  return {
+  return pageSeo({
     title: `Roadside Assistance for ${ct.name} in ${result.city.name}, ${result.state.abbreviation}`,
     description: `${ct.name} roadside assistance in ${result.city.name}, ${result.state.abbreviation}. ${ct.description} $100/hr flat.`,
-    alternates: { canonical: `/who-we-serve/${type}/${stateSlug}/${citySlug}` },
-  };
+    path: `/who-we-serve/${type}/${stateSlug}/${citySlug}`,
+  });
 }
 
 export default async function TypeCityPage({ params }: { params: Promise<{ type: string; state: string; city: string }> }) {
@@ -48,6 +53,20 @@ export default async function TypeCityPage({ params }: { params: Promise<{ type:
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Who We Serve", path: "/who-we-serve" },
+              { name: ct.name, path: `/who-we-serve/${ct.slug}` },
+              { name: state.name, path: `/who-we-serve/${ct.slug}/${state.slug}` },
+              { name: city.name, path: `/who-we-serve/${ct.slug}/${state.slug}/${city.slug}` },
+            ]),
+          ),
+        }}
+      />
       <section className="relative overflow-hidden bg-gradient-to-br from-teal-700 via-teal-600 to-teal-800 pt-36 pb-16 sm:pt-44 sm:pb-24">
         <div className="absolute inset-0 grid-bg opacity-30" />
         <div className="relative mx-auto max-w-5xl px-6 text-center">

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { CtaButtons } from "@/components/CtaButtons";
@@ -6,35 +5,38 @@ import { notFound } from "next/navigation";
 import { PHONE, PHONE_HREF, CITY_COUNT, STATE_COUNT } from "@/data/content";
 import { SERVICES, SERVICE_CATEGORIES, getExtendedContent } from "@/data/services";
 import { SERVICE_PHOTOS } from "@/data/photos";
-import { serviceSchema, jsonLd } from "@/lib/schema";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/schema";
+import { pageSeo } from "@/lib/seo";
 
 export function generateStaticParams() {
   return SERVICES.map((s) => ({ slug: s.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const service = SERVICES.find((s) => s.slug === slug);
   if (!service) return {};
-  return {
+  const lower = service.title.toLowerCase();
+  return pageSeo({
     title: `${service.title} Near Me — 24/7 at $100/hr | (888) 944-3001`,
     description: `${service.title} nationwide. ${service.description.slice(0, 100)}... Flat $100/hr, 1-hour min, 24/7. Call (888) 944-3001. ${CITY_COUNT} cities, all ${STATE_COUNT} states.`,
     keywords: [
-      `${service.title.toLowerCase()} near me`,
-      `24/7 ${service.title.toLowerCase()}`,
-      `cheap ${service.title.toLowerCase()}`,
-      `${service.title.toLowerCase()} cost`,
-      `${service.title.toLowerCase()} $100`,
-      `emergency ${service.title.toLowerCase()}`,
-      `${service.title.toLowerCase()} service nearby`,
+      `${lower} near me`,
+      `24/7 ${lower}`,
+      `cheap ${lower}`,
+      `${lower} cost`,
+      `${lower} $100`,
+      `emergency ${lower}`,
+      `${lower} service nearby`,
     ],
-    alternates: { canonical: `/services/${slug}` },
-    openGraph: {
-      title: `${service.title} Near Me — Flat $100/hr 24/7`,
-      description: `${service.description.slice(0, 150)}`,
-      url: `https://www.theroadsidehelper.com/services/${slug}`,
-    },
-  };
+    path: `/services/${slug}`,
+    ogTitle: `${service.title} Near Me — Flat $100/hr 24/7`,
+    ogDescription: service.description.slice(0, 150),
+  });
 }
 
 export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -58,6 +60,18 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             slug: service.slug,
             subtitle: service.subtitle,
           })),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Services", path: "/services" },
+              { name: service.title, path: `/services/${service.slug}` },
+            ]),
+          ),
         }}
       />
       {/* Hero */}

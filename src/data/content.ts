@@ -46,7 +46,7 @@ export const TESTIMONIALS = [
 export const FAQ = [
   { q: "How does your pricing work?", a: "Simple — $100 per hour with a 1-hour minimum. No trip fees, no after-hours surcharges, no equipment up-charges. The rate is the same at 2pm on a Tuesday or 2am on Christmas." },
   { q: "How fast can you get to me?", a: "Most calls are reached in 30–60 minutes. Highway breakdowns get priority dispatch. When you call, our dispatcher gives you a real ETA based on the nearest technician's current location." },
-  { q: "What services do you provide?", a: "Jump-starts, flat-tire changes, car and home lockouts, fuel delivery, local towing, winch-outs and recovery, on-site battery replacement, key fob battery replacement, and motorcycle/RV/diesel-specific roadside support." },
+  { q: "What services do you provide?", a: "Jump-starts, flat-tire changes, car lockouts, fuel delivery, local towing, winch-outs and recovery, on-site battery replacement, key fob battery replacement, and motorcycle/RV/diesel-specific roadside support." },
   { q: "Do I need a membership?", a: "No. We're pay-as-you-go. No annual fees, no contracts, no auto-renewals. You pay only when you actually need help. For most drivers, that's far cheaper than years of unused club membership dues." },
   { q: "Are you available 24/7?", a: "Yes — 24 hours a day, 365 days a year. Same flat rate overnight, weekends, and holidays. No after-hours surcharges." },
   { q: "What if my problem turns out to be bigger than expected?", a: "The technician will tell you on the spot and quote any additional time before continuing. You're never billed for time we didn't quote you for. If we can't fix it roadside, we'll get you towed to a shop." },

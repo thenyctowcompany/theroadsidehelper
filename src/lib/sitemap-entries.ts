@@ -4,11 +4,10 @@ import { SERVICES } from "@/data/services";
 import { CUSTOMER_TYPES } from "@/data/customer-types";
 import { BLOG_POSTS } from "@/data/blog-posts";
 
-const SITE = "https://www.theroadsidehelper.com";
+export const SITE = "https://www.theroadsidehelper.com";
+export const SITEMAP_CHUNK_SIZE = 25_000;
 
-const CHUNK_SIZE = 25000;
-
-function buildAllEntries(): MetadataRoute.Sitemap {
+export function buildSitemapEntries(): MetadataRoute.Sitemap {
   const now = new Date();
   const entries: MetadataRoute.Sitemap = [];
 
@@ -142,17 +141,7 @@ function buildAllEntries(): MetadataRoute.Sitemap {
   return entries;
 }
 
-export async function generateSitemaps() {
-  const total = buildAllEntries().length;
-  const count = Math.ceil(total / CHUNK_SIZE);
-  return Array.from({ length: count }, (_, i) => ({ id: i }));
-}
-
-export default async function sitemap(props: {
-  id: Promise<string>;
-}): Promise<MetadataRoute.Sitemap> {
-  const id = Number(await props.id);
-  const all = buildAllEntries();
-  const start = id * CHUNK_SIZE;
-  return all.slice(start, start + CHUNK_SIZE);
+export function getSitemapChunkCount(): number {
+  const total = buildSitemapEntries().length;
+  return Math.max(1, Math.ceil(total / SITEMAP_CHUNK_SIZE));
 }

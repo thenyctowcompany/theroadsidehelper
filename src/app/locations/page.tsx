@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaButtons } from "@/components/CtaButtons";
 import { ValuationHint } from "@/components/ValuationHint";
 import { PHONE, PHONE_HREF, SMS_HREF, CITY_COUNT, STATE_COUNT } from "@/data/content";
 import { STATES, TOTAL_CITIES } from "@/data/cities";
 import { OFFICES } from "@/data/offices";
+import { pageSeo } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageSeo({
   title: `Roadside Assistance Locations — 50 Offices, ${TOTAL_CITIES}+ Cities, All 50 States`,
   description: `Roadside assistance in 50 states, ${TOTAL_CITIES}+ cities. Flat $100/hr 24/7 nationwide. No membership. Call (888) 944-3001. Find your local office address and directions.`,
-  alternates: { canonical: "/locations" },
-};
+  path: "/locations",
+});
 
 export default function LocationsPage() {
   return (

@@ -1,39 +1,44 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BLOG_POSTS } from "@/data/blog-posts";
 import { AudioReader } from "@/components/AudioReader";
 import { CtaButtons } from "@/components/CtaButtons";
-import { blogPostSchema, jsonLd } from "@/lib/schema";
+import { blogPostSchema, breadcrumbSchema, jsonLd } from "@/lib/schema";
+import { pageSeo } from "@/lib/seo";
 
 export function generateStaticParams() {
   return BLOG_POSTS.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const post = BLOG_POSTS.find((p) => p.slug === slug);
   if (!post) return {};
-  return {
+  return pageSeo({
     title: `${post.title} — $100/hr Roadside Help`,
     description: `${post.excerpt} Flat $100/hr nationwide roadside assistance. Call (888) 944-3001.`,
     keywords: [
       post.title.toLowerCase(),
       post.category.toLowerCase(),
-      ...post.title.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 3).slice(0, 6),
+      ...post.title
+        .toLowerCase()
+        .split(/[^a-z0-9]+/)
+        .filter((w) => w.length > 3)
+        .slice(0, 6),
       "roadside assistance",
       "$100/hr roadside",
       "(888) 944-3001",
     ],
-    alternates: { canonical: `/blog/${slug}` },
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      type: "article",
-      publishedTime: post.date,
-      url: `https://www.theroadsidehelper.com/blog/${slug}`,
-    },
-  };
+    path: `/blog/${slug}`,
+    type: "article",
+    publishedTime: post.date,
+    ogTitle: post.title,
+    ogDescription: post.excerpt,
+  });
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -57,6 +62,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             date: post.date,
             content: post.content,
           })),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Blog", path: "/blog" },
+              { name: post.title, path: `/blog/${post.slug}` },
+            ]),
+          ),
         }}
       />
       <section className="relative overflow-hidden bg-gradient-to-br from-teal-700 via-teal-600 to-teal-800 pt-36 pb-16 sm:pt-44 sm:pb-24">

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaButtons } from "@/components/CtaButtons";
 import { ValuationHint } from "@/components/ValuationHint";
@@ -10,7 +9,8 @@ import { cityServicePageContent } from "@/data/content-templates";
 import { generateCityTips } from "@/data/city-tips";
 import { getOfficeByState } from "@/data/offices";
 import { OfficeBlock } from "@/components/OfficeBlock";
-import { serviceSchema, jsonLd } from "@/lib/schema";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/schema";
+import { pageSeo } from "@/lib/seo";
 
 function isTipsSlug(slug: string) {
   return slug.includes("roadside-help-in-") && slug.endsWith("-guide-tips-and-costs");
@@ -31,22 +31,26 @@ export function generateStaticParams() {
   return params;
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ state: string; city: string; service: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ state: string; city: string; service: string }>;
+}) {
   const { state: stateSlug, city: citySlug, service: serviceSlug } = await params;
   const result = getCityBySlug(stateSlug, citySlug);
   if (!result) return {};
 
-  const canonical = `/locations/${stateSlug}/${citySlug}/${serviceSlug}`;
+  const path = `/locations/${stateSlug}/${citySlug}/${serviceSlug}`;
 
   if (isTipsSlug(serviceSlug)) {
     const tips = generateCityTips(result.city.name, result.state.name, result.state.abbreviation);
-    return { title: tips.title, description: tips.metaDescription, alternates: { canonical } };
+    return pageSeo({ title: tips.title, description: tips.metaDescription, path });
   }
 
   const service = SERVICES.find((s) => s.slug === serviceSlug);
   if (!service) return {};
   const content = cityServicePageContent(result.city.name, result.state.name, result.state.abbreviation, service);
-  return { title: content.title, description: content.metaDescription, alternates: { canonical } };
+  return pageSeo({ title: content.title, description: content.metaDescription, path });
 }
 
 export default async function CityServicePage({ params }: { params: Promise<{ state: string; city: string; service: string }> }) {
@@ -72,6 +76,23 @@ export default async function CityServicePage({ params }: { params: Promise<{ st
             slug: serviceSlug,
             subtitle: "Local roadside guide",
           })),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Locations", path: "/locations" },
+              { name: state.name, path: `/locations/${state.slug}` },
+              { name: city.name, path: `/locations/${state.slug}/${city.slug}` },
+              {
+                name: "Guide",
+                path: `/locations/${stateSlug}/${citySlug}/${serviceSlug}`,
+              },
+            ]),
+          ),
         }}
       />
       <section className="relative overflow-hidden bg-gradient-to-br from-teal-700 via-teal-600 to-teal-800 pt-36 pb-16 sm:pt-44 sm:pb-24">
@@ -182,6 +203,23 @@ export default async function CityServicePage({ params }: { params: Promise<{ st
             slug: serviceSlug,
             subtitle: service.subtitle,
           })),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Locations", path: "/locations" },
+              { name: state.name, path: `/locations/${state.slug}` },
+              { name: city.name, path: `/locations/${state.slug}/${city.slug}` },
+              {
+                name: service.title,
+                path: `/locations/${state.slug}/${city.slug}/${service.slug}`,
+              },
+            ]),
+          ),
         }}
       />
       {/* Hero */}

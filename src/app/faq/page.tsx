@@ -1,15 +1,23 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { PHONE, PHONE_HREF, SMS_HREF, FAQ } from "@/data/content";
 import { CtaButtons } from "@/components/CtaButtons";
 import { faqSchema, jsonLd } from "@/lib/schema";
+import { pageSeo } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Roadside Assistance FAQ — $100/hr Pricing, 24/7 Hours, Service Q&A | (888) 944-3001",
-  description: "Roadside assistance FAQ: $100/hr flat pricing, 24/7 dispatch, services covered, fleet accounts, vehicle types. Call (888) 944-3001. No memberships, no surcharges.",
-  keywords: ["roadside assistance FAQ", "roadside cost", "roadside pricing questions", "24/7 roadside hours", "roadside service near me"],
-  alternates: { canonical: "/faq" },
-};
+export const metadata = pageSeo({
+  title:
+    "Roadside Assistance FAQ — $100/hr Pricing, 24/7 Hours, Service Q&A | (888) 944-3001",
+  description:
+    "Roadside assistance FAQ: $100/hr flat pricing, 24/7 dispatch, services covered, fleet accounts, vehicle types. Call (888) 944-3001. No memberships, no surcharges.",
+  keywords: [
+    "roadside assistance FAQ",
+    "roadside cost",
+    "roadside pricing questions",
+    "24/7 roadside hours",
+    "roadside service near me",
+  ],
+  path: "/faq",
+});
 
 const LEFT_FAQS = [
   { q: "How much does roadside assistance cost?", a: <>Flat $100 per hour with a 1-hour minimum. Same rate overnights, weekends, and holidays. No after-hours surcharges. Tow mileage past 5 miles, fuel at pump price, and replacement parts are billed separately at cost. See our <Link href="/pricing" className="text-emerald-700 font-semibold hover:underline">pricing page</Link>.</> },
@@ -22,7 +30,6 @@ const LEFT_FAQS = [
   { q: "Do you provide jump-start service?", a: <>Yes. Commercial-grade jump packs (not consumer cables) that protect modern vehicle electronics. After the jump, we run a quick voltage check to tell you whether the battery will hold a charge. See <Link href="/services/jump-start-service" className="text-emerald-700 font-semibold hover:underline">jump-start details</Link>.</> },
   { q: "Can you change a flat tire on the road?", a: <>Yes. Spare swap or on-site plug-and-inflate for tread punctures. Sidewall damage requires the spare. See <Link href="/services/flat-tire-change" className="text-emerald-700 font-semibold hover:underline">tire service</Link>.</> },
   { q: "What if I'm locked out of my car?", a: <>We use professional wedge-and-rod tools — no slim jims that damage power windows. Most lockouts take 5–15 minutes. See <Link href="/services/car-lockout-service" className="text-emerald-700 font-semibold hover:underline">lockout service</Link>.</> },
-  { q: "What about lockouts at home?", a: <>Residential lockouts too — we can pick most pin-tumbler, deadbolt, and lever locks without damaging the door or hardware. ID confirming access to the address required. See <Link href="/services/house-lockout-service" className="text-emerald-700 font-semibold hover:underline">house lockouts</Link>.</> },
   { q: "What if I run out of gas?", a: <>We deliver 2–5 gallons of gasoline or diesel in approved containers. Fuel billed at pump price plus the service rate. See <Link href="/services/fuel-delivery-service" className="text-emerald-700 font-semibold hover:underline">fuel delivery</Link>.</> },
   { q: "Do you tow vehicles?", a: <>Yes. Flatbed for AWD/4WD and low-clearance vehicles, wheel-lift for standard sedans. 5 miles included in the standard rate, additional mileage at local per-mile rate. See <Link href="/services/tow-truck-service" className="text-emerald-700 font-semibold hover:underline">tow service</Link>.</> },
 ];

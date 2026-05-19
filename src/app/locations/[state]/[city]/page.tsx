@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaButtons } from "@/components/CtaButtons";
 import { notFound } from "next/navigation";
@@ -9,6 +8,8 @@ import { cityPageContent } from "@/data/content-templates";
 import { getOfficeByState } from "@/data/offices";
 import { OfficeBlock } from "@/components/OfficeBlock";
 import { ValuationHint } from "@/components/ValuationHint";
+import { breadcrumbSchema, jsonLd } from "@/lib/schema";
+import { pageSeo } from "@/lib/seo";
 
 function isStateGuide(slug: string) {
   return slug.includes("roadside-help-in-") && slug.endsWith("-guide-tips-and-costs");
@@ -28,23 +29,37 @@ export function generateStaticParams() {
   return [...cityParams, ...guideParams];
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ state: string; city: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ state: string; city: string }>;
+}) {
   const { state: stateSlug, city: citySlug } = await params;
 
   if (isStateGuide(citySlug)) {
     const state = getStateBySlug(stateSlug);
     if (!state) return {};
-    return {
+    return pageSeo({
       title: `Roadside Assistance in ${state.name} — Complete Guide, Tips & Costs`,
       description: `Everything ${state.name} residents need to know about roadside assistance. Local tips, pricing, what items earn you credit, and how to save in ${state.abbreviation}.`,
-      alternates: { canonical: `/locations/${stateSlug}/${citySlug}` },
-    };
+      path: `/locations/${stateSlug}/${citySlug}`,
+    });
   }
 
   const result = getCityBySlug(stateSlug, citySlug);
   if (!result) return {};
-  const content = cityPageContent(result.city.name, result.state.name, result.state.abbreviation, result.state.slug, result.state.cities.filter((c) => c.slug !== citySlug));
-  return { title: content.title, description: content.metaDescription, alternates: { canonical: `/locations/${stateSlug}/${citySlug}` } };
+  const content = cityPageContent(
+    result.city.name,
+    result.state.name,
+    result.state.abbreviation,
+    result.state.slug,
+    result.state.cities.filter((c) => c.slug !== citySlug),
+  );
+  return pageSeo({
+    title: content.title,
+    description: content.metaDescription,
+    path: `/locations/${stateSlug}/${citySlug}`,
+  });
 }
 
 export default async function CityPage({ params }: { params: Promise<{ state: string; city: string }> }) {
@@ -59,6 +74,22 @@ export default async function CityPage({ params }: { params: Promise<{ state: st
 
     return (
       <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: jsonLd(
+              breadcrumbSchema([
+                { name: "Home", path: "/" },
+                { name: "Locations", path: "/locations" },
+                { name: state.name, path: `/locations/${state.slug}` },
+                {
+                  name: `${state.name} Guide`,
+                  path: `/locations/${stateSlug}/${citySlug}`,
+                },
+              ]),
+            ),
+          }}
+        />
         <section className="relative overflow-hidden bg-gradient-to-br from-teal-700 via-teal-600 to-teal-800 pt-36 pb-16 sm:pt-44 sm:pb-24">
           <div className="absolute inset-0 grid-bg opacity-30" />
           <div className="relative mx-auto max-w-5xl px-6 text-center">
@@ -78,28 +109,27 @@ export default async function CityPage({ params }: { params: Promise<{ state: st
             <p className="text-center text-sm font-semibold uppercase tracking-widest text-teal-600 font-cta">What {state.name} Residents Need to Know About Roadside Assistance</p>
             <h2 className="mt-3 text-center text-3xl font-bold text-slate-900 font-heading">The Complete Guide to Roadside Assistance in {state.name}</h2>
             <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-600">
-              From <Link href={`/locations/${stateSlug}`} className="text-teal-700 font-semibold hover:underline">{state.cities.length} cities served</Link> to <Link href="/pricing" className="text-teal-700 font-semibold hover:underline">transparent pricing</Link> to <Link href="/services" className="text-teal-700 font-semibold hover:underline">34 service types</Link>.
+              From <Link href={`/locations/${stateSlug}`} className="text-teal-700 font-semibold hover:underline">{state.cities.length} cities served</Link> to <Link href="/pricing" className="text-teal-700 font-semibold hover:underline">transparent pricing</Link> to <Link href="/services" className="text-teal-700 font-semibold hover:underline">every roadside service</Link>.
             </p>
             <div className="mx-auto mt-8 max-w-3xl space-y-5 text-center text-base leading-relaxed text-slate-700">
-              <p>Here&apos;s the industry secret every {state.name} resident should know: <strong>every roadside assistance company in {state.abbreviation} has been charging you for the service AND keeping 35%+ of your items to resell for profit.</strong> The Roadside Helper is the only company in {state.name} that credits you 50% (when applicable) of service quality. $100/hr flat with all standard equipment included.</p>
-              <p>Our {state.abbreviation} crews know the local local markets, recycling centers, and donation partners in your area. That local knowledge means better assessments, faster jobs, and more money back in your pocket.</p>
+              <p>Here&apos;s what makes us different in {state.name}: <strong>no membership, no annual dues, no contracts.</strong> You pay only when you actually need help — one flat $100/hr rate, 1-hour minimum, same price overnight, weekends, and holidays. No after-hours surcharges, no equipment up-charges, no hidden trip fees.</p>
+              <p>Our {state.abbreviation} dispatch knows the highways, the shoulder hazards, and the towing destinations in your area. That local knowledge means faster ETAs, safer scenes, and fewer surprises when help arrives.</p>
             </div>
-            <ValuationHint className="mx-auto mt-8 max-w-3xl" />
           </div>
         </section>
 
         <section className="bg-section-teal py-16">
           <div className="mx-auto max-w-5xl px-6">
-            <p className="text-center text-sm font-semibold uppercase tracking-widest text-teal-600 font-cta">Items Worth Money in {state.name}</p>
-            <h2 className="mt-3 text-center text-3xl font-bold text-slate-900 font-heading">What Earns You Credit in {state.name}</h2>
+            <p className="text-center text-sm font-semibold uppercase tracking-widest text-teal-600 font-cta">Most Common Roadside Calls in {state.name}</p>
+            <h2 className="mt-3 text-center text-3xl font-bold text-slate-900 font-heading">What We Handle Most in {state.name}</h2>
             <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-600">
-              {state.name} homes have items worth more than you think. Here&apos;s what our <Link href={`/locations/${stateSlug}`} className="text-teal-700 font-semibold hover:underline">local crews</Link> see most often.
+              Here&apos;s what our <Link href={`/locations/${stateSlug}`} className="text-teal-700 font-semibold hover:underline">{state.name} dispatch</Link> sees on a typical week — and what one flat $100/hr rate covers.
             </p>
             <div className="mx-auto mt-8 max-w-3xl space-y-5 text-center text-base leading-relaxed text-slate-700">
-              <p><strong>Furniture ($50–$2,000+):</strong> Solid wood dining sets, dressers, desks, leather sofas. <Link href="/services/flat-tire-change" className="text-teal-700 font-semibold hover:underline">Furniture removal</Link> is our most-requested service in {state.abbreviation}.</p>
-              <p><strong>Appliances ($75–$600+):</strong> Working refrigerators, washers, dryers, ovens. <Link href="/services/battery-replacement-on-site" className="text-teal-700 font-semibold hover:underline">Appliance removal</Link> frequently covers the entire bill.</p>
-              <p><strong>Tools ($25–$500+):</strong> DeWalt, Milwaukee, Makita — {state.name} garages are full of value most homeowners don&apos;t realize.</p>
-              <p><strong>Electronics, exercise equipment, instruments, outdoor gear</strong> — all have active local markets in {state.abbreviation}.</p>
+              <p><strong>Jump-Starts &amp; Dead Batteries:</strong> The #1 call in {state.abbreviation}. <Link href="/services/jump-start-service" className="text-teal-700 font-semibold hover:underline">Jump-start service</Link> at $100 flat, with a quick alternator check included.</p>
+              <p><strong>Flat Tires &amp; Blowouts:</strong> Spare swaps, on-site plug-and-inflate, or full <Link href="/services/mobile-tire-replacement" className="text-teal-700 font-semibold hover:underline">mobile tire replacement</Link> if the sidewall is gone.</p>
+              <p><strong>Lockouts:</strong> Keys locked in the car, trunk, or snapped off in the ignition. <Link href="/services/car-lockout-service" className="text-teal-700 font-semibold hover:underline">Car lockout service</Link> in 5–15 minutes, no damage to door panels or seals.</p>
+              <p><strong>Fuel Delivery, Tows &amp; Winch-Outs</strong> — plus EV charging delivery and accident-tow coordination, all at the same flat rate across {state.abbreviation}.</p>
             </div>
           </div>
         </section>
@@ -145,6 +175,22 @@ export default async function CityPage({ params }: { params: Promise<{ state: st
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Locations", path: "/locations" },
+              { name: state.name, path: `/locations/${state.slug}` },
+              {
+                name: city.name,
+                path: `/locations/${state.slug}/${city.slug}`,
+              },
+            ]),
+          ),
+        }}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-teal-700 via-teal-600 to-teal-800 pt-36 pb-16 sm:pt-44 sm:pb-24">
         <div className="absolute inset-0 grid-bg opacity-30" />

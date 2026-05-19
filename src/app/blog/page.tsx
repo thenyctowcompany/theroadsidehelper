@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaButtons } from "@/components/CtaButtons";
 import { BLOG_POSTS } from "@/data/blog-posts";
+import { pageSeo } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Roadside Assistance Tips & Blog — 100 Guides at $100/hr | The Roadside Helper",
-  description: "100 roadside assistance guides: battery, tires, lockouts, fuel, towing, seasonal prep, regional advice. Flat $100/hr roadside service. Call (888) 944-3001.",
-  alternates: { canonical: "/blog" },
-};
+export const metadata = pageSeo({
+  title:
+    "Roadside Assistance Tips & Blog — 100 Guides at $100/hr | The Roadside Helper",
+  description:
+    "100 roadside assistance guides: battery, tires, lockouts, fuel, towing, seasonal prep, regional advice. Flat $100/hr roadside service. Call (888) 944-3001.",
+  path: "/blog",
+});
 
 export default function BlogPage() {
   return (

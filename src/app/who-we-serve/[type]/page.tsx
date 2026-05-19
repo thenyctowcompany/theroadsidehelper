@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PHONE, PHONE_HREF, SMS_HREF, CITY_COUNT, STATE_COUNT } from "@/data/content";
@@ -8,20 +7,26 @@ import { STATES } from "@/data/cities";
 import { CtaButtons } from "@/components/CtaButtons";
 import { ValuationHint } from "@/components/ValuationHint";
 import { customerTypeContent } from "@/data/customer-content";
+import { breadcrumbSchema, jsonLd } from "@/lib/schema";
+import { pageSeo } from "@/lib/seo";
 
 export function generateStaticParams() {
   return CUSTOMER_TYPES.map((ct) => ({ type: ct.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ type: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ type: string }>;
+}) {
   const { type } = await params;
   const ct = CUSTOMER_TYPES.find((c) => c.slug === type);
   if (!ct) return {};
-  return {
+  return pageSeo({
     title: `Roadside Assistance for ${ct.name} — The Roadside Helper for Your Stuff`,
     description: `${ct.description} $100/hr flat, all standard equipment included, 24/7 dispatch. ${CITY_COUNT}+ cities.`,
-    alternates: { canonical: `/who-we-serve/${type}` },
-  };
+    path: `/who-we-serve/${type}`,
+  });
 }
 
 export default async function CustomerTypePage({ params }: { params: Promise<{ type: string }> }) {
@@ -34,6 +39,18 @@ export default async function CustomerTypePage({ params }: { params: Promise<{ t
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Who We Serve", path: "/who-we-serve" },
+              { name: ct.name, path: `/who-we-serve/${ct.slug}` },
+            ]),
+          ),
+        }}
+      />
       <section className="relative overflow-hidden bg-gradient-to-br from-teal-700 via-teal-600 to-teal-800 pt-36 pb-16 sm:pt-44 sm:pb-24">
         <div className="absolute inset-0 grid-bg opacity-30" />
         <div className="relative mx-auto max-w-5xl px-6 text-center">
@@ -51,7 +68,7 @@ export default async function CustomerTypePage({ params }: { params: Promise<{ t
           <p className="text-center text-sm font-semibold uppercase tracking-widest text-teal-600 font-cta">How Our Model Works for {ct.name}</p>
           <h2 className="mt-3 text-center text-3xl font-bold text-slate-900 font-heading">Why {ct.name} Choose The Roadside Helper</h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-600">
-            See our <Link href="/pricing" className="text-teal-700 font-semibold hover:underline">transparent pricing</Link>, browse <Link href="/services" className="text-teal-700 font-semibold hover:underline">all 34 services</Link>, or <Link href="/book-roadside-help-now" className="text-teal-700 font-semibold hover:underline">book your pickup</Link> today.
+            See our <Link href="/pricing" className="text-teal-700 font-semibold hover:underline">transparent pricing</Link>, browse <Link href="/services" className="text-teal-700 font-semibold hover:underline">every roadside service</Link>, or <Link href="/book-roadside-help-now" className="text-teal-700 font-semibold hover:underline">book roadside help</Link> today.
           </p>
           <div className="mx-auto mt-8 max-w-3xl space-y-5 text-center text-base leading-relaxed text-slate-700">
             {customerTypeContent(ct).map((p, i) => (
@@ -67,7 +84,7 @@ export default async function CustomerTypePage({ params }: { params: Promise<{ t
           <p className="text-center text-sm font-semibold uppercase tracking-widest text-teal-600 font-cta">Common Pain Points for {ct.name}</p>
           <h2 className="mt-3 text-center text-3xl font-bold text-slate-900 font-heading">Problems We Solve for {ct.name}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-600">
-            Sound familiar? Every one of these is a reason to call us instead of a flat-rate hauler.
+            Sound familiar? Every one of these is a reason to call us instead of waiting hours on an auto club.
           </p>
           <div className="mx-auto mt-8 max-w-2xl grid grid-cols-1 gap-3 sm:grid-cols-2">
             {ct.painPoints.map((pp) => (
@@ -82,15 +99,15 @@ export default async function CustomerTypePage({ params }: { params: Promise<{ t
 
       <section className="bg-section-white py-16">
         <div className="mx-auto max-w-5xl px-6">
-          <p className="text-center text-sm font-semibold uppercase tracking-widest text-teal-600 font-cta">What {ct.name} Earn in Response Times</p>
-          <h2 className="mt-3 text-center text-3xl font-bold text-slate-900 font-heading">Credit Highlights for {ct.name}</h2>
+          <p className="text-center text-sm font-semibold uppercase tracking-widest text-teal-600 font-cta">Why {ct.name} Choose Us</p>
+          <h2 className="mt-3 text-center text-3xl font-bold text-slate-900 font-heading">What {ct.name} Get</h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-600">
-            Real numbers from real jobs. See our <Link href="/pricing" className="text-teal-700 font-semibold hover:underline">full pricing page</Link> for detailed breakdowns.
+            What sets the service apart for your situation. See our <Link href="/pricing" className="text-teal-700 font-semibold hover:underline">full pricing page</Link> for detailed cost breakdowns.
           </p>
           <div className="mx-auto mt-8 max-w-2xl space-y-3">
             {ct.creditHighlights.map((ch) => (
               <div key={ch} className="flex items-start gap-3 rounded-lg border border-teal-200 bg-teal-50 p-4">
-                <span className="text-teal-600 mt-0.5 shrink-0 font-bold">$</span>
+                <span className="text-teal-600 mt-0.5 shrink-0 font-bold">✓</span>
                 <span className="text-sm text-slate-700">{ch}</span>
               </div>
             ))}
@@ -103,7 +120,7 @@ export default async function CustomerTypePage({ params }: { params: Promise<{ t
           <p className="text-center text-sm font-semibold uppercase tracking-widest text-teal-600 font-cta">Top Services for {ct.name}</p>
           <h2 className="mt-3 text-center text-3xl font-bold text-slate-900 font-heading">Recommended Services for {ct.name}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-600">
-            These are the services {ct.shortName.toLowerCase()} use most. All <Link href="/services" className="text-teal-700 font-semibold hover:underline">34 services</Link> are available.
+            These are the services {ct.shortName.toLowerCase()} use most. <Link href="/services" className="text-teal-700 font-semibold hover:underline">Every roadside service</Link> is available.
           </p>
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {relatedServices.map((s) => (

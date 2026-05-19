@@ -1,15 +1,24 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaButtons } from "@/components/CtaButtons";
 import { PricingCalculator } from "@/components/PricingCalculator";
 import { PHONE, PHONE_HREF, PRICING, CITY_COUNT, STATE_COUNT } from "@/data/content";
+import { pageSeo } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Roadside Assistance Pricing Near Me — $100/hr Flat 24/7 | (888) 944-3001",
-  description: "Roadside assistance pricing: flat $100/hr with 1-hour minimum, same rate overnights/weekends/holidays. No memberships, no surcharges. Call (888) 944-3001 nationwide.",
-  keywords: ["roadside assistance pricing", "roadside cost near me", "$100/hr roadside", "flat rate roadside", "no membership roadside", "cheap roadside assistance"],
-  alternates: { canonical: "/pricing" },
-};
+export const metadata = pageSeo({
+  title:
+    "Roadside Assistance Pricing Near Me — $100/hr Flat 24/7 | (888) 944-3001",
+  description:
+    "Roadside assistance pricing: flat $100/hr with 1-hour minimum, same rate overnights/weekends/holidays. No memberships, no surcharges. Call (888) 944-3001 nationwide.",
+  keywords: [
+    "roadside assistance pricing",
+    "roadside cost near me",
+    "$100/hr roadside",
+    "flat rate roadside",
+    "no membership roadside",
+    "cheap roadside assistance",
+  ],
+  path: "/pricing",
+});
 
 export default function PricingPage() {
   return (

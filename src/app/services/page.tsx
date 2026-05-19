@@ -1,17 +1,27 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { PHONE, PHONE_HREF, CITY_COUNT, STATE_COUNT } from "@/data/content";
 import { SERVICES, SERVICE_CATEGORIES } from "@/data/services";
 import { CtaButtons } from "@/components/CtaButtons";
 import { SERVICE_PHOTOS } from "@/data/photos";
+import { pageSeo } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Roadside Assistance Services Near Me — 12 Services at $100/hr 24/7 | (888) 944-3001",
-  description: "12 roadside services nationwide at flat $100/hr: jump-starts, flat tire change, lockouts, fuel delivery, towing, winch-outs, motorcycle/RV/diesel. Call (888) 944-3001. No membership.",
-  keywords: ["roadside services near me", "24/7 roadside services", "jump start service", "flat tire change near me", "tow truck near me", "fuel delivery near me", "car lockout near me"],
-  alternates: { canonical: "/services" },
-};
+export const metadata = pageSeo({
+  title:
+    "Roadside Assistance Services Near Me — 12 Services at $100/hr 24/7 | (888) 944-3001",
+  description:
+    "12 roadside services nationwide at flat $100/hr: jump-starts, flat tire change, lockouts, fuel delivery, towing, winch-outs, motorcycle/RV/diesel. Call (888) 944-3001. No membership.",
+  keywords: [
+    "roadside services near me",
+    "24/7 roadside services",
+    "jump start service",
+    "flat tire change near me",
+    "tow truck near me",
+    "fuel delivery near me",
+    "car lockout near me",
+  ],
+  path: "/services",
+});
 
 type CategoryKey = keyof typeof SERVICE_CATEGORIES;
 

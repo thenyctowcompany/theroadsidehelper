@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaButtons } from "@/components/CtaButtons";
 import { PHONE, PHONE_HREF } from "@/data/content";
+import { pageSeo } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Fleet Roadside Assistance — Flat $100/hr Predictable Billing 24/7 | (888) 944-3001",
-  description: "Fleet roadside assistance: consolidated billing, dedicated dispatch, flat $100/hr per call, no per-vehicle fees. Delivery fleets, dealers, rental. Call (888) 944-3001.",
-  alternates: { canonical: "/commercial" },
-};
+export const metadata = pageSeo({
+  title:
+    "Fleet Roadside Assistance — Flat $100/hr Predictable Billing 24/7 | (888) 944-3001",
+  description:
+    "Fleet roadside assistance: consolidated billing, dedicated dispatch, flat $100/hr per call, no per-vehicle fees. Delivery fleets, dealers, rental. Call (888) 944-3001.",
+  path: "/commercial",
+});
 
 export default function CommercialPage() {
   return (

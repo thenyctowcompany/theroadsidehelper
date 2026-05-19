@@ -1,16 +1,18 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { PHONE, PHONE_HREF, CITY_COUNT, STATE_COUNT } from "@/data/content";
 import { SERVICES } from "@/data/services";
 import { CtaButtons } from "@/components/CtaButtons";
 import { SECTION_PHOTOS } from "@/data/photos";
+import { pageSeo } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About The Roadside Helper — Flat $100/hr 24/7 Roadside | (888) 944-3001",
-  description: "About The Roadside Helper: nationwide pay-as-you-go roadside assistance at flat $100/hr, 1-hour minimum, no contracts. Call (888) 944-3001. 900+ cities, all 50 states, 12 services.",
-  alternates: { canonical: "/about" },
-};
+export const metadata = pageSeo({
+  title:
+    "About The Roadside Helper — Flat $100/hr 24/7 Roadside | (888) 944-3001",
+  description:
+    "About The Roadside Helper: nationwide pay-as-you-go roadside assistance at flat $100/hr, 1-hour minimum, no contracts. Call (888) 944-3001. 900+ cities, all 50 states, 12 services.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

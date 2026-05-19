@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { EMAIL, CITY_COUNT, STATE_COUNT } from "@/data/content";
+import { pageSeo } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Roadside Technician Jobs Near Me — Hourly + Tips, Paid Training | The Roadside Helper",
-  description: "Roadside technician jobs in 900+ cities, all 50 states. Jump-starts, tire changes, lockouts, fuel, towing. Hourly base + tips, paid training, benefits. Apply today.",
-  alternates: { canonical: "/careers" },
-};
+export const metadata = pageSeo({
+  title:
+    "Roadside Technician Jobs Near Me — Hourly + Tips, Paid Training | The Roadside Helper",
+  description:
+    "Roadside technician jobs in 900+ cities, all 50 states. Jump-starts, tire changes, lockouts, fuel, towing. Hourly base + tips, paid training, benefits. Apply today.",
+  path: "/careers",
+});
 
 export default function CareersPage() {
   return (

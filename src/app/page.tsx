@@ -18,10 +18,52 @@ import {
   STATES,
 } from "@/data/content";
 import { HERO_PHOTO, SERVICE_PHOTOS, SECTION_PHOTOS, CUSTOMER_PHOTOS } from "@/data/photos";
+import { faqSchema, jsonLd } from "@/lib/schema";
+
+const SITE_URL = "https://www.theroadsidehelper.com";
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE_URL}/#website`,
+  url: SITE_URL,
+  name: "The Roadside Helper",
+  publisher: { "@id": `${SITE_URL}/#business` },
+  inLanguage: "en-US",
+};
+
+const servicesItemListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Roadside Assistance Services",
+  itemListElement: SERVICES.map((s, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    item: {
+      "@type": "Service",
+      name: s.title,
+      url: `${SITE_URL}/services/${s.slug}`,
+      provider: { "@id": `${SITE_URL}/#business` },
+    },
+  })),
+};
 
 export default function HomePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(websiteSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema(FAQ)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(servicesItemListSchema) }}
+      />
+
       {/* ─── HERO ─── */}
       <section className="relative overflow-hidden bg-slate-900 pt-36 pb-16 sm:pt-44 sm:pb-24">
         <div className="absolute inset-0">

@@ -16,15 +16,18 @@ const ROADSIDE_OPTIONS: ServiceOption[] = [
   { id: "jump", name: "Jump-Start (Dead Battery)", minutes: 25, category: "Emergency" },
   { id: "flat-tire", name: "Flat Tire — Spare Swap", minutes: 30, category: "Emergency" },
   { id: "tire-plug", name: "Tire Plug & Inflate", minutes: 30, category: "Emergency" },
+  { id: "mobile-tire", name: "Mobile Tire Replacement (new tire)", minutes: 45, category: "Emergency" },
   { id: "battery-install", name: "On-Site Battery Replacement", minutes: 35, category: "Emergency" },
+  { id: "ev-charge", name: "EV Charging Delivery", minutes: 30, category: "Emergency" },
   { id: "key-fob", name: "Key Fob Battery Replacement", minutes: 10, category: "Emergency" },
   // Lockout
   { id: "car-lockout", name: "Car Lockout", minutes: 20, category: "Lockout" },
-  { id: "house-lockout", name: "House / Apartment Lockout", minutes: 30, category: "Lockout" },
   { id: "trunk-lockout", name: "Trunk Lockout", minutes: 25, category: "Lockout" },
+  { id: "broken-key", name: "Broken Key Extraction", minutes: 20, category: "Lockout" },
   // Recovery
   { id: "fuel", name: "Fuel Delivery (2–5 gal)", minutes: 25, category: "Recovery" },
   { id: "local-tow", name: "Local Tow (≤5 mi)", minutes: 50, category: "Recovery" },
+  { id: "accident-tow", name: "Accident / Collision Tow", minutes: 60, category: "Recovery" },
   { id: "winch-light", name: "Winch-Out — Soft Shoulder", minutes: 30, category: "Recovery" },
   { id: "winch-heavy", name: "Winch-Out — Snow/Mud/Ditch", minutes: 45, category: "Recovery" },
   // Specialty

@@ -9,11 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/"],
       },
     ],
-    sitemap: [
-      "https://www.theroadsidehelper.com/sitemap/0.xml",
-      "https://www.theroadsidehelper.com/sitemap/1.xml",
-      "https://www.theroadsidehelper.com/sitemap/2.xml",
-    ],
+    sitemap: ["https://www.theroadsidehelper.com/sitemap.xml"],
     host: "https://www.theroadsidehelper.com",
   };
 }

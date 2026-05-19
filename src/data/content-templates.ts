@@ -36,7 +36,7 @@ export function statePageContent(stateName: string, stateAbbr: string, cities: {
         heading: `${sc} Roadside Services Available in ${stateName}`,
         paragraphs: [
           `We offer ${sc} specialized roadside services across ${stateName}. Every service is available in all ${cities.length} ${stateAbbr} cities we serve. Same flat rate. Same trained technicians. Same 24/7 dispatch.`,
-          `Emergency roadside includes jump-starts for dead batteries, flat tire changes (spare swap or on-site plug-and-inflate), and on-site battery replacement when a jump-start isn't enough. Lockout services cover car lockouts, house lockouts, trunk lockouts, and key fob battery replacement.`,
+          `Emergency roadside includes jump-starts for dead batteries, flat tire changes (spare swap or on-site plug-and-inflate), mobile tire replacement when a new tire is needed, on-site battery replacement, and EV charging delivery for stranded electric vehicles. Lockout services cover car lockouts, trunk lockouts, broken key extraction, and key fob battery replacement.`,
           `Fuel and recovery covers out-of-gas delivery (gasoline or diesel, 2–5 gallons at pump price plus the service rate), local towing (flatbed for AWD/4WD or low-clearance vehicles, wheel-lift for standard sedans), and winch-out recovery for vehicles stuck in mud, snow, sand, or ditches.`,
           `Specialty vehicle service in ${stateName} covers motorcycle roadside (motorcycle-trained techs only, never standard auto techs), RV roadside for Class A, B, and C motorhomes and travel trailers, and diesel truck roadside for light and medium-duty work trucks (cold-start, fuel-bleed, DEF delivery).`,
         ],
@@ -111,7 +111,7 @@ export function cityPageContent(cityName: string, stateName: string, stateAbbr: 
       {
         heading: `${sc} Roadside Services in ${cityName}, ${stateAbbr}`,
         paragraphs: [
-          `We offer ${sc} specialized roadside services in ${cityName}: jump-starts, flat tire changes, car lockouts, house lockouts, fuel delivery, local towing, winch-out recovery, on-site battery replacement, key fob battery replacement, motorcycle roadside, RV roadside, and diesel truck roadside.`,
+          `We offer ${sc} specialized roadside services in ${cityName}: jump-starts, flat tire changes, mobile tire replacement, car lockouts, trunk lockouts, broken key extraction, fuel delivery, EV charging delivery, local towing, accident and collision tow, winch-out recovery, on-site battery replacement, key fob battery replacement, motorcycle roadside, RV roadside, and diesel truck roadside.`,
           `For ${cityName} commuters, the most common services are jump-starts (cold mornings, lights left on) and flat tire changes (potholes, road debris). For rideshare drivers in ${cityName}, priority dispatch keeps downtime minimal — every minute off the road is lost income.`,
           `For parents stranded with kids in the car, our dispatch treats the call as priority. For seniors, our techs are trained to communicate clearly and never resort to high-pressure upsells. For fleet managers operating in ${cityName}, we offer consolidated monthly billing and dedicated dispatch lines.`,
         ],
