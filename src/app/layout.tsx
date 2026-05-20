@@ -4,7 +4,6 @@ import { Sora, DM_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { CookieConsent } from "@/components/CookieConsent";
 import { localBusinessSchema, jsonLd } from "@/lib/schema";
 
 const sora = Sora({ variable: "--font-sora", subsets: ["latin"] });
@@ -92,7 +91,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Header />
         <main>{children}</main>
         <Footer />
-        <CookieConsent />
         <Script
           id="tawk-to"
           strategy="afterInteractive"
