@@ -22,7 +22,7 @@ export default function LocationsPage() {
             50 Offices &bull; {TOTAL_CITIES}+ Cities &bull; All 50 States
           </p>
           <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl font-heading">
-            The Roadside Helper <span className="gradient-text">Locations</span>
+            Roadside Assistance Near Me —<br /><span className="gradient-text">{TOTAL_CITIES}+ Cities, 24/7</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-white/80">
             One office in every state. {TOTAL_CITIES}+ cities served nationwide. $100/hr flat, all standard equipment included, 24/7 dispatch nationwide.

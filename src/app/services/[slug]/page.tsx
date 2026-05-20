@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { PHONE, PHONE_HREF, CITY_COUNT, STATE_COUNT } from "@/data/content";
 import { SERVICES, SERVICE_CATEGORIES, getExtendedContent } from "@/data/services";
 import { SERVICE_PHOTOS } from "@/data/photos";
-import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/schema";
+import { serviceSchema, breadcrumbSchema, howToSchema, graph } from "@/lib/schema";
 import { pageSeo } from "@/lib/seo";
 
 export function generateStaticParams() {
@@ -54,24 +54,20 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: jsonLd(serviceSchema({
-            name: service.title,
-            description: service.description,
-            slug: service.slug,
-            subtitle: service.subtitle,
-          })),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: jsonLd(
+          __html: graph([
+            serviceSchema({
+              name: service.title,
+              description: service.description,
+              slug: service.slug,
+              subtitle: service.subtitle,
+            }),
+            howToSchema({ name: service.title, description: service.description }),
             breadcrumbSchema([
               { name: "Home", path: "/" },
               { name: "Services", path: "/services" },
               { name: service.title, path: `/services/${service.slug}` },
             ]),
-          ),
+          ]),
         }}
       />
       {/* Hero */}

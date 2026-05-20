@@ -1,7 +1,75 @@
 import { PHONE, EMAIL, RATING, REVIEW_COUNT, TESTIMONIALS } from "@/data/content";
+import { SERVICES } from "@/data/services";
 
 const SITE_URL = "https://www.theroadsidehelper.com";
 const BUSINESS_NAME = "The Roadside Helper";
+
+// ============================================================
+// Organization schema (separate identity for parent brand)
+// ============================================================
+export function organizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: BUSINESS_NAME,
+    legalName: BUSINESS_NAME,
+    url: SITE_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}/icon`,
+      width: "512",
+      height: "512",
+    },
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: PHONE,
+        contactType: "customer service",
+        areaServed: "US",
+        availableLanguage: ["en"],
+        hoursAvailable: {
+          "@type": "OpeningHoursSpecification",
+          opens: "00:00",
+          closes: "23:59",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        },
+      },
+      {
+        "@type": "ContactPoint",
+        telephone: PHONE,
+        contactType: "emergency",
+        areaServed: "US",
+        availableLanguage: ["en"],
+      },
+    ],
+    sameAs: [],
+  };
+}
+
+// ============================================================
+// WebSite schema (with SearchAction for sitelinks search box)
+// ============================================================
+export function webSiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    url: SITE_URL,
+    name: BUSINESS_NAME,
+    description: "24/7 nationwide roadside assistance. Flat $100/hr, no membership.",
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    inLanguage: "en-US",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SITE_URL}/locations?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+}
 
 // ============================================================
 // LocalBusiness / AutomotiveBusiness schema for the org
@@ -9,7 +77,7 @@ const BUSINESS_NAME = "The Roadside Helper";
 export function localBusinessSchema() {
   return {
     "@context": "https://schema.org",
-    "@type": "AutomotiveBusiness",
+    "@type": ["AutomotiveBusiness", "EmergencyService"],
     "@id": `${SITE_URL}/#business`,
     name: BUSINESS_NAME,
     legalName: BUSINESS_NAME,
@@ -18,7 +86,14 @@ export function localBusinessSchema() {
     telephone: PHONE,
     email: EMAIL,
     priceRange: "$100/hr",
-    openingHours: "Mo-Su 00:00-23:59",
+    paymentAccepted: ["Cash", "Credit Card", "Debit Card", "Apple Pay", "Google Pay", "Venmo", "Zelle", "CashApp"],
+    currenciesAccepted: "USD",
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      opens: "00:00",
+      closes: "23:59",
+    },
     areaServed: { "@type": "Country", name: "United States" },
     address: {
       "@type": "PostalAddress",
@@ -29,6 +104,13 @@ export function localBusinessSchema() {
       "@type": "GeoCoordinates",
       latitude: "39.8283",
       longitude: "-98.5795",
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: PHONE,
+      contactType: "emergency",
+      areaServed: "US",
+      availableLanguage: "en",
     },
     aggregateRating: {
       "@type": "AggregateRating",
@@ -48,6 +130,28 @@ export function localBusinessSchema() {
       reviewBody: t.text,
       datePublished: "2026-01-01",
     })),
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Roadside Assistance Services",
+      itemListElement: SERVICES.map((s) => ({
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: s.title,
+          description: s.description,
+          url: `${SITE_URL}/services/${s.slug}`,
+        },
+        price: "100",
+        priceCurrency: "USD",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: "100",
+          priceCurrency: "USD",
+          unitText: "hour",
+        },
+      })),
+    },
+    knowsAbout: SERVICES.map((s) => s.title),
     sameAs: [],
   };
 }
@@ -65,6 +169,7 @@ export function serviceSchema(args: { name: string; description: string; slug: s
     description: args.description,
     url: `${SITE_URL}/services/${args.slug}`,
     areaServed: { "@type": "Country", name: "United States" },
+    audience: { "@type": "Audience", audienceType: "Drivers, Fleet Operators, Commuters" },
     offers: {
       "@type": "Offer",
       price: "100",
@@ -85,6 +190,54 @@ export function serviceSchema(args: { name: string; description: string; slug: s
       reviewCount: REVIEW_COUNT.replace("+", ""),
       bestRating: "5",
     },
+  };
+}
+
+// ============================================================
+// HowTo schema for service pages — describes the "how it works" flow
+// ============================================================
+export function howToSchema(args: { name: string; description: string }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: `How to Get ${args.name} from The Roadside Helper`,
+    description: args.description,
+    totalTime: "PT1H",
+    estimatedCost: {
+      "@type": "MonetaryAmount",
+      currency: "USD",
+      value: "100",
+    },
+    step: [
+      {
+        "@type": "HowToStep",
+        position: 1,
+        name: "Call or text",
+        text: `Call ${PHONE} or text the same number. A real dispatcher answers — no menus. Tell us your location, vehicle, and the problem.`,
+        url: `${SITE_URL}/book-roadside-help-now#step-1`,
+      },
+      {
+        "@type": "HowToStep",
+        position: 2,
+        name: "Get an ETA",
+        text: "The nearest technician calls back with an arrival estimate, typically under an hour. You'll get a text with the technician's name and ETA.",
+        url: `${SITE_URL}/book-roadside-help-now#step-2`,
+      },
+      {
+        "@type": "HowToStep",
+        position: 3,
+        name: "We arrive and solve it",
+        text: `The technician confirms the situation, walks you through the fix, and gets to work. ${args.name} jobs usually finish inside the 1-hour minimum.`,
+        url: `${SITE_URL}/book-roadside-help-now#step-3`,
+      },
+      {
+        "@type": "HowToStep",
+        position: 4,
+        name: "Pay flat $100/hr",
+        text: "Digital invoice on your phone — flat $100/hr, no trip fees, no surcharges. Card, Apple Pay, Google Pay, Venmo, Zelle, CashApp, or cash all accepted.",
+        url: `${SITE_URL}/book-roadside-help-now#step-4`,
+      },
+    ],
   };
 }
 
@@ -115,8 +268,8 @@ export function blogPostSchema(args: { slug: string; title: string; excerpt: str
     url: `${SITE_URL}/blog/${args.slug}`,
     datePublished: args.date,
     dateModified: args.date,
-    author: { "@type": "Organization", name: BUSINESS_NAME, "@id": `${SITE_URL}/#business` },
-    publisher: { "@id": `${SITE_URL}/#business` },
+    author: { "@type": "Organization", name: BUSINESS_NAME, "@id": `${SITE_URL}/#organization` },
+    publisher: { "@id": `${SITE_URL}/#organization` },
     articleBody: args.content.join(" "),
     mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/blog/${args.slug}` },
   };
@@ -139,8 +292,39 @@ export function breadcrumbSchema(items: Array<{ name: string; path: string }>) {
 }
 
 // ============================================================
+// Place schema for city/state location pages
+// ============================================================
+export function placeSchema(args: { city: string; state: string; stateAbbr: string }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Place",
+    name: `${args.city}, ${args.stateAbbr}`,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: args.city,
+      addressRegion: args.stateAbbr,
+      addressCountry: "US",
+    },
+    containedInPlace: {
+      "@type": "AdministrativeArea",
+      name: args.state,
+    },
+  };
+}
+
+// ============================================================
 // JSON-LD script tag helper
 // ============================================================
 export function jsonLd(schema: object): string {
   return JSON.stringify(schema);
+}
+
+// ============================================================
+// Helper to inject multiple schemas as @graph
+// ============================================================
+export function graph(schemas: object[]): string {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": schemas,
+  });
 }

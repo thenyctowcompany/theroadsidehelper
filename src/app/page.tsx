@@ -79,16 +79,15 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-slate-900/70 to-emerald-900/80" />
         <div className="relative mx-auto max-w-5xl px-6 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-amber-300 font-cta">
-            24/7 Nationwide Roadside Assistance
+            Stranded? Help is under an hour away.
           </p>
           <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl font-heading">
-            <span className="block text-amber-300">Stranded?</span>
-            We'll Be There in Under an Hour
+            24/7 Roadside Assistance Near Me —
+            <span className="block text-amber-300">Jump-Start, Tire, Lockout, Tow</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-white/85">
-            Jump-starts, flat tire changes, lockouts, fuel delivery, towing, and winch-outs.
-            Flat <strong className="text-white">$100/hr</strong>, 1-hour minimum, no membership.
-            Most jobs are done inside the minimum.
+            Flat <strong className="text-white">$100/hr</strong>, 1-hour minimum, no membership, no surcharges.
+            Jump-starts, flat tire changes, lockouts, fuel delivery, towing, and winch-outs in 900+ cities across all 50 states. Most jobs finish inside the minimum.
           </p>
 
           <div className="mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4">

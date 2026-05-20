@@ -4,7 +4,7 @@ import { Sora, DM_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { localBusinessSchema, jsonLd } from "@/lib/schema";
+import { localBusinessSchema, organizationSchema, webSiteSchema, graph } from "@/lib/schema";
 
 const sora = Sora({ variable: "--font-sora", subsets: ["latin"] });
 const dmSans = DM_Sans({ variable: "--font-dm-sans", subsets: ["latin"] });
@@ -84,7 +84,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: jsonLd(localBusinessSchema()) }}
+          dangerouslySetInnerHTML={{
+            __html: graph([organizationSchema(), webSiteSchema(), localBusinessSchema()]),
+          }}
         />
       </head>
       <body className="font-body antialiased">

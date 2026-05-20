@@ -8,7 +8,7 @@ import { cityPageContent } from "@/data/content-templates";
 import { getOfficeByState } from "@/data/offices";
 import { OfficeBlock } from "@/components/OfficeBlock";
 import { ValuationHint } from "@/components/ValuationHint";
-import { breadcrumbSchema, jsonLd } from "@/lib/schema";
+import { breadcrumbSchema, jsonLd, placeSchema, graph } from "@/lib/schema";
 import { pageSeo } from "@/lib/seo";
 
 function isStateGuide(slug: string) {
@@ -178,7 +178,7 @@ export default async function CityPage({ params }: { params: Promise<{ state: st
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: jsonLd(
+          __html: graph([
             breadcrumbSchema([
               { name: "Home", path: "/" },
               { name: "Locations", path: "/locations" },
@@ -188,7 +188,8 @@ export default async function CityPage({ params }: { params: Promise<{ state: st
                 path: `/locations/${state.slug}/${city.slug}`,
               },
             ]),
-          ),
+            placeSchema({ city: city.name, state: state.name, stateAbbr: state.abbreviation }),
+          ]),
         }}
       />
       {/* Hero */}
